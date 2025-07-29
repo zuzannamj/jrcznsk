@@ -24,7 +24,7 @@
       background-size: cover;
       background-position: center;
       will-change: opacity, transform;
-      transition: opacity 1s ease-in-out, transform 3s ease-in-out;
+      transition: opacity 1s ease-in-out, transform 6s ease-in-out;
       z-index: 0;
     }
 
@@ -33,10 +33,10 @@
       bottom: 2vh;
       right: 2vw;
       color: white;
-      font-size: 3vw;
+      font-size: 8vw;
       font-weight: bold;
       z-index: 10;
-      text-shadow: 1px 1px 2px black;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     }
 
     @media (max-width: 768px) {
@@ -45,7 +45,7 @@
         right: 0;
         bottom: 1vh;
         text-align: center;
-        font-size: 5vw;
+        font-size: 6vw;
       }
     }
   </style>
@@ -79,23 +79,21 @@
     const [bg1, bg2] = [document.getElementById("bg1"), document.getElementById("bg2")];
 
     function setBackground(div, filename) {
-      const startZoom = 1.2;
-const endZoom = 1.35;
-const zoomX = (Math.random() - 0.5) * 10;
-const zoomY = (Math.random() - 0.5) * 10;
-
-div.style.transform = `scale(${startZoom}) translate(${zoomX}px, ${zoomY}px)`;
-
-// Then animate to final zoom
-setTimeout(() => {
-  div.style.transition = "transform 6s ease-in-out, opacity 1s ease-in-out";
-  div.style.transform = `scale(${endZoom}) translate(${zoomX}px, ${zoomY}px)`;
-}, 100);
-      const x = (Math.random() - 0.5) * 20;
-      const y = (Math.random() - 0.5) * 20;
+      const startZoom = 1.3;
+      const endZoom = 1.6;
+      const zoomX = (Math.random() - 0.5) * 20;
+      const zoomY = (Math.random() - 0.5) * 20;
 
       div.style.backgroundImage = `url(${filename})`;
-      div.style.transform = `scale(${zoom}) translate(${x}px, ${y}px)`;
+      div.style.opacity = 0;
+      div.style.transition = "none";
+      div.style.transform = `scale(${startZoom}) translate(${zoomX}px, ${zoomY}px)`;
+
+      requestAnimationFrame(() => {
+        div.style.transition = "opacity 1s ease-in-out, transform 6s ease-in-out";
+        div.style.opacity = 1;
+        div.style.transform = `scale(${endZoom}) translate(${zoomX}px, ${zoomY}px)`;
+      });
     }
 
     function preloadAndTransition() {
@@ -109,21 +107,24 @@ setTimeout(() => {
         const next = current === 1 ? bg2 : bg1;
 
         setBackground(next, filename);
+        next.style.zIndex = 1;
+        active.style.zIndex = 0;
+
         next.style.opacity = 1;
         active.style.opacity = 0;
+
         current = current === 1 ? 2 : 1;
 
-        // Schedule next transition after preload
-        setTimeout(preloadAndTransition, 4000); // 4s between transitions
+        setTimeout(preloadAndTransition, 5000); // time per image
       };
     }
 
-    // First image
+    // Show first image
     setBackground(bg1, filenames[0]);
 
-    // Preload second and start transition
+    // Start transitions after load
     window.addEventListener("load", () => {
-      setTimeout(preloadAndTransition, 3000);
+      setTimeout(preloadAndTransition, 4000);
     });
   </script>
 </body>
