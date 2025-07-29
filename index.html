@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>jrcznsk.com</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      font-family: sans-serif;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 300%; height: 300%;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 2s ease-in-out, transform 8s ease-in-out;
+      will-change: transform, opacity;
+      z-index: 0;
+    }
+
+    .contact {
+      position: absolute;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      z-index: 2;
+      right: 2vw;
+      bottom: 2vh;
+    }
+
+    @media (max-width: 768px) {
+      .contact {
+        right: 0;
+        left: 0;
+        bottom: 0;
+        text-align: center;
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" id="bg1"></div>
+  <div class="bg" id="bg2" style="opacity: 0;"></div>
+  <div class="contact">Contact: zu@jrcznsk.com</div>
+
+  <script>
+    const lomographyUsername = 'zmj';
+    const imageURLs = [];
+    let index = 0;
+    let current = 1;
+
+    async function fetchImageURLs() {
+      try {
+        const res = await fetch(`https://www.lomography.com/homes/${lomographyUsername}`);
+        const text = await res.text();
+        const matches = [...text.matchAll(/https:\/\/assets\.lomography\.com\/[^"]+\/photo[^"]+\.jpg/g)];
+        const urls = matches.map(m => m[0]);
+        return [...new Set(urls)].slice(0, 30);
+      } catch (e) {
+        console.error('Failed to fetch images:', e);
+        return [];
+      }
+    }
+
+    function setBackground(div, url) {
+      div.style.backgroundImage = `url(${url})`;
+      const x = Math.random() * 100 - 50;
+      const y = Math.random() * 100 - 50;
+      const zoom = 1.8 + Math.random() * 1.2; // zoom between 1.8 and 3.0
+      div.style.transform = `translate(${x}%, ${y}%) scale(${zoom})`;
+    }
+
+    async function cycleImages() {
+      if (imageURLs.length === 0) return;
+
+      const bg1 = document.getElementById('bg1');
+      const bg2 = document.getElementById('bg2');
+
+      const active = current === 1 ? bg1 : bg2;
+      const next = current === 1 ? bg2 : bg1;
+
+      index = (index + 1) % imageURLs.length;
+      setBackground(next, imageURLs[index]);
+
+      next.style.opacity = 1;
+      active.style.opacity = 0;
+      current = current === 1 ? 2 : 1;
+    }
+
+    (async () => {
+      imageURLs.push(...await fetchImageURLs());
+      if (imageURLs.length === 0) return;
+
+      setBackground(document.getElementById('bg1'), imageURLs[0]);
+      setInterval(cycleImages, 8000);
+    })();
+  </script>
+</body>
+</html>
