@@ -88,21 +88,21 @@
         div.style.transition = "none";
         div.style.opacity = 0;
 
-        // Overfill viewport with safe zoom to avoid black edges
-        const startZoom = 1.5;
-        const endZoom = 1.8;
-        const zoomX = (Math.random() - 0.5) * 40;
-        const zoomY = (Math.random() - 0.5) * 40;
+        // Artistic motion
+        const zoomStart = 1.4;
+        const zoomEnd = Math.random() > 0.5 ? 1.7 : 1.2; // random zoom in or out
+        const panX = (Math.random() - 0.5) * 60; // pan left/right
+        const panY = (Math.random() - 0.5) * 60; // pan up/down
 
-        div.style.transform = `scale(${startZoom}) translate(${zoomX}px, ${zoomY}px)`;
+        div.style.transform = `scale(${zoomStart}) translate(${panX}px, ${panY}px)`;
 
-        // Next animation frame
+        // Next frame
         requestAnimationFrame(() => {
-          div.style.transition = "opacity 1s ease-in-out, transform 8s ease-in-out";
+          div.style.transition = "opacity 1s ease-in-out, transform 10s ease-in-out";
           div.style.opacity = 1;
-          div.style.transform = `scale(${endZoom}) translate(${zoomX}px, ${zoomY}px)`;
+          div.style.transform = `scale(${zoomEnd}) translate(${panX}px, ${panY}px)`;
 
-          callback && callback(); // continue only after load + frame
+          callback && callback(); // only proceed after load + frame
         });
       };
     }
@@ -118,15 +118,15 @@
         active.style.opacity = 0;
         current = current === 1 ? 2 : 1;
 
-        // Schedule next after some time
-        setTimeout(transitionNext, 6000);
+        // Wait before next transition
+        setTimeout(transitionNext, 7000);
       });
     }
 
-    // First image
+    // Initial image
     setBackground(bg1, filenames[0], () => {
       bg1.style.opacity = 1;
-      setTimeout(transitionNext, 6000);
+      setTimeout(transitionNext, 7000);
     });
   </script>
 </body>
