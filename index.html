@@ -24,7 +24,7 @@
       background-size: cover;
       background-position: center;
       will-change: opacity, transform;
-      transition: opacity 1s ease-in-out, transform 2.5s ease-in-out;
+      transition: opacity 1s ease-in-out, transform 3s ease-in-out;
       z-index: 0;
     }
 
@@ -76,37 +76,55 @@
 
     let index = 0;
     let current = 1;
-
     const [bg1, bg2] = [document.getElementById("bg1"), document.getElementById("bg2")];
 
     function setBackground(div, filename) {
-      div.style.backgroundImage = `url(${filename})`;
+      const startZoom = 1.2;
+const endZoom = 1.35;
+const zoomX = (Math.random() - 0.5) * 10;
+const zoomY = (Math.random() - 0.5) * 10;
 
-      const zoomDirection = Math.random() > 0.5 ? 1.15 : 0.85;
+div.style.transform = `scale(${startZoom}) translate(${zoomX}px, ${zoomY}px)`;
+
+// Then animate to final zoom
+setTimeout(() => {
+  div.style.transition = "transform 6s ease-in-out, opacity 1s ease-in-out";
+  div.style.transform = `scale(${endZoom}) translate(${zoomX}px, ${zoomY}px)`;
+}, 100);
       const x = (Math.random() - 0.5) * 20;
       const y = (Math.random() - 0.5) * 20;
 
-      div.style.transform = `scale(${zoomDirection}) translate(${x}px, ${y}px)`;
+      div.style.backgroundImage = `url(${filename})`;
+      div.style.transform = `scale(${zoom}) translate(${x}px, ${y}px)`;
     }
 
-    function cycleImages() {
-      const active = current === 1 ? bg1 : bg2;
-      const next = current === 1 ? bg2 : bg1;
-
+    function preloadAndTransition() {
       index = (index + 1) % filenames.length;
-      setBackground(next, filenames[index]);
+      const filename = filenames[index];
+      const img = new Image();
+      img.src = filename;
 
-      next.style.opacity = 1;
-      active.style.opacity = 0;
+      img.onload = () => {
+        const active = current === 1 ? bg1 : bg2;
+        const next = current === 1 ? bg2 : bg1;
 
-      current = current === 1 ? 2 : 1;
+        setBackground(next, filename);
+        next.style.opacity = 1;
+        active.style.opacity = 0;
+        current = current === 1 ? 2 : 1;
+
+        // Schedule next transition after preload
+        setTimeout(preloadAndTransition, 4000); // 4s between transitions
+      };
     }
 
-    // Initial background
+    // First image
     setBackground(bg1, filenames[0]);
 
-    // Start transitions
-    setInterval(cycleImages, 2500);
+    // Preload second and start transition
+    window.addEventListener("load", () => {
+      setTimeout(preloadAndTransition, 3000);
+    });
   </script>
 </body>
 </html>
