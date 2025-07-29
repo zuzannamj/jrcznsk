@@ -53,33 +53,38 @@
   <div class="contact">Contact: zu@jrcznsk.com</div>
 
   <script>
-    const lomographyUsername = 'zmj';
-    const imageURLs = [];
+    let imageURLs = [
+      "https://assets.lomography.com/photo/284/820/50/fb1dcd6ce8f45b6cc1a0c774fa7fe79f61cb3fc6.jpg",
+      "https://assets.lomography.com/photo/284/820/52/2c18a7088452ae197ba8f1f9df229a6c7330c847.jpg",
+      "https://assets.lomography.com/photo/284/776/84/3c86a0c7349de40c52a2cc5ce28839922ab6a823.jpg",
+      "https://assets.lomography.com/photo/284/776/88/e57b13aeef7dc3005db8397692b4cd0f03ed2bdc.jpg",
+      "https://assets.lomography.com/photo/284/776/87/e62c58c183a79b29cf8627541e2b810e6ef38f98.jpg",
+      "https://assets.lomography.com/photo/284/776/82/b5e7ce11cc1b891042c27d60a0d69d9dbf8f75d5.jpg",
+      "https://assets.lomography.com/photo/284/776/83/c5deab62164814d6e4e7c8712a2d30742cf048e5.jpg",
+      "https://assets.lomography.com/photo/282/065/81/af553515d3d80d4fe04d2fe7b7c211501a3f56e2.jpg",
+      "https://assets.lomography.com/photo/282/065/85/eaf94c67b48962f0f7aa42ab8e84266de65a6034.jpg",
+      "https://assets.lomography.com/photo/282/065/82/f0d2c59c5a8844e7e78db3c7e4a6bbff52f4e7f3.jpg",
+      "https://assets.lomography.com/photo/282/065/83/2cdbdd9052a2a531a1ea9425b02c4cf866b179df.jpg",
+      "https://assets.lomography.com/photo/281/150/35/193c709a32aa01dbcb3c21bcd0c9f303ff8e1092.jpg"
+
+      // ✅ Add more image URLs here later
+    ];
+
+    // Shuffle image URLs so they’re different each visit
+    imageURLs = imageURLs.sort(() => Math.random() - 0.5);
+
     let index = 0;
     let current = 1;
-
-    async function fetchImageURLs() {
-      try {
-        const res = await fetch(`https://www.lomography.com/homes/${lomographyUsername}`);
-        const text = await res.text();
-        const matches = [...text.matchAll(/https:\/\/assets\.lomography\.com\/[^"]+\/photo[^"]+\.jpg/g)];
-        const urls = matches.map(m => m[0]);
-        return [...new Set(urls)].slice(0, 30);
-      } catch (e) {
-        console.error('Failed to fetch images:', e);
-        return [];
-      }
-    }
 
     function setBackground(div, url) {
       div.style.backgroundImage = `url(${url})`;
       const x = Math.random() * 100 - 50;
       const y = Math.random() * 100 - 50;
-      const zoom = 1.8 + Math.random() * 1.2; // zoom between 1.8 and 3.0
+      const zoom = 1.8 + Math.random() * 1.2;
       div.style.transform = `translate(${x}%, ${y}%) scale(${zoom})`;
     }
 
-    async function cycleImages() {
+    function cycleImages() {
       if (imageURLs.length === 0) return;
 
       const bg1 = document.getElementById('bg1');
@@ -96,13 +101,9 @@
       current = current === 1 ? 2 : 1;
     }
 
-    (async () => {
-      imageURLs.push(...await fetchImageURLs());
-      if (imageURLs.length === 0) return;
-
-      setBackground(document.getElementById('bg1'), imageURLs[0]);
-      setInterval(cycleImages, 8000);
-    })();
+    // Initial setup
+    setBackground(document.getElementById('bg1'), imageURLs[0]);
+    setInterval(cycleImages, 8000);
   </script>
 </body>
 </html>
