@@ -53,24 +53,27 @@
   <div class="contact">Contact: zu@jrcznsk.com</div>
 
   <script>
-    let imageURLs = [
-      "https://assets.lomography.com/photo/284/820/50/fb1dcd6ce8f45b6cc1a0c774fa7fe79f61cb3fc6.jpg",
-      "https://assets.lomography.com/photo/284/820/52/2c18a7088452ae197ba8f1f9df229a6c7330c847.jpg",
-      "https://assets.lomography.com/photo/284/776/84/3c86a0c7349de40c52a2cc5ce28839922ab6a823.jpg",
-      "https://assets.lomography.com/photo/284/776/88/e57b13aeef7dc3005db8397692b4cd0f03ed2bdc.jpg",
-      "https://assets.lomography.com/photo/284/776/87/e62c58c183a79b29cf8627541e2b810e6ef38f98.jpg",
-      "https://assets.lomography.com/photo/284/776/82/b5e7ce11cc1b891042c27d60a0d69d9dbf8f75d5.jpg",
-      "https://assets.lomography.com/photo/284/776/83/c5deab62164814d6e4e7c8712a2d30742cf048e5.jpg",
-      "https://assets.lomography.com/photo/282/065/81/af553515d3d80d4fe04d2fe7b7c211501a3f56e2.jpg",
-      "https://assets.lomography.com/photo/282/065/85/eaf94c67b48962f0f7aa42ab8e84266de65a6034.jpg",
-      "https://assets.lomography.com/photo/282/065/82/f0d2c59c5a8844e7e78db3c7e4a6bbff52f4e7f3.jpg",
-      "https://assets.lomography.com/photo/282/065/83/2cdbdd9052a2a531a1ea9425b02c4cf866b179df.jpg",
-      "https://assets.lomography.com/photo/281/150/35/193c709a32aa01dbcb3c21bcd0c9f303ff8e1092.jpg"
-
-      // ✅ Add more image URLs here later
+    // 🧠 Just add new filenames here when you upload more:
+    let filenames = [
+      "IMG_0227.jpeg",
+      "IMG_0232.jpeg",
+      "IMG_0242.jpeg",
+      "IMG_0244.jpeg",
+      "IMG_0256.jpeg",
+      "IMG_0259.jpeg",
+      "IMG_0264.jpeg",
+      "IMG_0266.jpeg",
+      "IMG_0267.jpeg",
+      "IMG_0274.jpeg",
+      "IMG_0275.jpeg",
+      "IMG_6540.jpeg",
+      "IMG_6552.jpeg",
+      "IMG_6555.jpeg",
+      "IMG_6560.jpeg"
     ];
 
-    // Shuffle image URLs so they’re different each visit
+    // Build full URLs from filenames
+    let imageURLs = filenames.map(name => `${name}`);
     imageURLs = imageURLs.sort(() => Math.random() - 0.5);
 
     let index = 0;
