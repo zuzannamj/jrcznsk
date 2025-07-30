@@ -24,7 +24,6 @@
       background-size: cover;
       background-position: center;
       will-change: opacity, transform;
-      transition: opacity 1s ease-in-out;
       z-index: 0;
       opacity: 0;
     }
@@ -60,7 +59,6 @@
       "IMG_6552.jpeg", "IMG_6555.jpeg", "IMG_6560.jpeg"
     ];
 
-    // Fisher–Yates shuffle
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -74,7 +72,7 @@
     let current = 1;
     const [bg1, bg2] = [document.getElementById("bg1"), document.getElementById("bg2")];
 
-    function setBackground(div, filename, callback) {
+    function setBackground(div, filename, zoomStart, zoomEnd, callback) {
       const img = new Image();
       img.src = filename;
 
@@ -83,19 +81,15 @@
         div.style.transition = "none";
         div.style.opacity = 0;
 
-        // Zoom direction
-        const zoomStart = 1.6;
-        const zoomEnd = Math.random() > 0.5 ? 1.2 : 2.0;
-        const panX = (Math.random() - 0.5) * 100;
-        const panY = (Math.random() - 0.5) * 100;
+        const panX = (Math.random() - 0.5) * 80;
+        const panY = (Math.random() - 0.5) * 80;
 
         div.style.transform = `scale(${zoomStart}) translate(${panX}px, ${panY}px)`;
 
         requestAnimationFrame(() => {
-          div.style.transition = "opacity 1.2s ease-in-out, transform 6s ease-in-out";
+          div.style.transition = "opacity 1s ease-in-out, transform 4.5s ease-in-out";
           div.style.opacity = 1;
           div.style.transform = `scale(${zoomEnd}) translate(${panX}px, ${panY}px)`;
-
           callback && callback();
         });
       };
@@ -108,18 +102,36 @@
       const active = current === 1 ? bg1 : bg2;
       const next = current === 1 ? bg2 : bg1;
 
-      setBackground(next, filename, () => {
-        active.style.opacity = 0;
-        current = current === 1 ? 2 : 1;
+      const inZoomStart = 1.3 + Math.random() * 0.5;
+      const inZoomEnd = 1.0 + Math.random() * 0.2;
 
-        setTimeout(transitionNext, 5500); // faster pacing
+      const outZoomStart = 1.0;
+      const outZoomEnd = 1.5 + Math.random() * 0.5;
+
+      // Incoming image: zoom in or out randomly
+      const zoomIn = Math.random() > 0.5;
+      const zoomStart = zoomIn ? inZoomStart : inZoomEnd;
+      const zoomEnd = zoomIn ? inZoomEnd : inZoomStart;
+
+      setBackground(next, filename, zoomStart, zoomEnd, () => {
+        active.style.transition = "opacity 1s ease-in-out, transform 4.5s ease-in-out";
+        active.style.opacity = 0;
+
+        // Zoom out the fading layer for parallax effect
+        const panX = (Math.random() - 0.5) * 80;
+        const panY = (Math.random() - 0.5) * 80;
+        active.style.transform = `scale(${outZoomEnd}) translate(${panX}px, ${panY}px)`;
+
+        current = current === 1 ? 2 : 1;
+        setTimeout(transitionNext, 5000);
       });
     }
 
     // Start
-    setBackground(bg1, shuffled[0], () => {
+    const initialZoom = 1.5;
+    setBackground(bg1, shuffled[0], initialZoom, 1.1, () => {
       bg1.style.opacity = 1;
-      setTimeout(transitionNext, 5000);
+      setTimeout(transitionNext, 4000);
     });
   </script>
 </body>
