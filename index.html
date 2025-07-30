@@ -34,19 +34,15 @@
       bottom: 2vh;
       right: 2vw;
       color: white;
-      font-size: 3vw;
+      font-size: 6vw;
       font-weight: bold;
       z-index: 10;
       text-shadow: 2px 2px 5px black;
     }
 
-    @media (max-width: 768px) {
+    @media (min-width: 768px) {
       .contact {
-        left: 0;
-        right: 0;
-        bottom: 1vh;
-        text-align: center;
-        font-size: 5vw;
+        font-size: 3vw;
       }
     }
   </style>
@@ -58,23 +54,22 @@
 
   <script>
     const filenames = [
-      "IMG_0227.jpeg",
-      "IMG_0232.jpeg",
-      "IMG_0242.jpeg",
-      "IMG_0244.jpeg",
-      "IMG_0256.jpeg",
-      "IMG_0259.jpeg",
-      "IMG_0264.jpeg",
-      "IMG_0266.jpeg",
-      "IMG_0267.jpeg",
-      "IMG_0274.jpeg",
-      "IMG_0275.jpeg",
-      "IMG_6540.jpeg",
-      "IMG_6552.jpeg",
-      "IMG_6555.jpeg",
-      "IMG_6560.jpeg"
+      "IMG_0227.jpeg", "IMG_0242.jpeg", "IMG_0244.jpeg",
+      "IMG_0256.jpeg", "IMG_0259.jpeg", "IMG_0264.jpeg", "IMG_0266.jpeg",
+      "IMG_0267.jpeg", "IMG_0274.jpeg", "IMG_0275.jpeg", "IMG_6540.jpeg",
+      "IMG_6552.jpeg", "IMG_6555.jpeg", "IMG_6560.jpeg"
     ];
 
+    // Fisher–Yates shuffle
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    const shuffled = shuffle(filenames.slice());
     let index = 0;
     let current = 1;
     const [bg1, bg2] = [document.getElementById("bg1"), document.getElementById("bg2")];
@@ -88,28 +83,27 @@
         div.style.transition = "none";
         div.style.opacity = 0;
 
-        // Artistic motion
-        const zoomStart = 1.4;
-        const zoomEnd = Math.random() > 0.5 ? 1.7 : 1.2; // random zoom in or out
-        const panX = (Math.random() - 0.5) * 60; // pan left/right
-        const panY = (Math.random() - 0.5) * 60; // pan up/down
+        // Zoom direction
+        const zoomStart = 1.6;
+        const zoomEnd = Math.random() > 0.5 ? 1.2 : 2.0;
+        const panX = (Math.random() - 0.5) * 100;
+        const panY = (Math.random() - 0.5) * 100;
 
         div.style.transform = `scale(${zoomStart}) translate(${panX}px, ${panY}px)`;
 
-        // Next frame
         requestAnimationFrame(() => {
-          div.style.transition = "opacity 1s ease-in-out, transform 10s ease-in-out";
+          div.style.transition = "opacity 1.2s ease-in-out, transform 6s ease-in-out";
           div.style.opacity = 1;
           div.style.transform = `scale(${zoomEnd}) translate(${panX}px, ${panY}px)`;
 
-          callback && callback(); // only proceed after load + frame
+          callback && callback();
         });
       };
     }
 
     function transitionNext() {
-      index = (index + 1) % filenames.length;
-      const filename = filenames[index];
+      index = (index + 1) % shuffled.length;
+      const filename = shuffled[index];
 
       const active = current === 1 ? bg1 : bg2;
       const next = current === 1 ? bg2 : bg1;
@@ -118,15 +112,14 @@
         active.style.opacity = 0;
         current = current === 1 ? 2 : 1;
 
-        // Wait before next transition
-        setTimeout(transitionNext, 7000);
+        setTimeout(transitionNext, 5500); // faster pacing
       });
     }
 
-    // Initial image
-    setBackground(bg1, filenames[0], () => {
+    // Start
+    setBackground(bg1, shuffled[0], () => {
       bg1.style.opacity = 1;
-      setTimeout(transitionNext, 7000);
+      setTimeout(transitionNext, 5000);
     });
   </script>
 </body>
