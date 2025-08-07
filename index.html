@@ -1,85 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>jrcznsk</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>jrcznsk.com</title>
+  <style>
+    @font-face {
+      font-family: "Roslindale";
+      src: url("https://use.typekit.net/af/ef5f77/00000000000000003b9ae578/27/l?subset_id=2&fvd=n7&v=3") format("woff2");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
 
-    <!-- Stylish, scruffy font -->
-    <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: black;
+      height: 100%;
+      width: 100%;
+    }
 
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        background: black;
-        height: 100%;
-        overflow: hidden;
-        font-family: 'Rock Salt', cursive;
+    .bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 1s ease-in-out, transform 3s ease-in-out;
+    }
+
+    .contact {
+      position: absolute;
+      bottom: 2vh;
+      right: 2vw;
+      font-family: "Roslindale", serif;
+      font-size: 6vw;
+      font-weight: bold;
+      z-index: 10;
+      display: flex;
+      flex-direction: row;
+      gap: 1vw;
+    }
+
+    .label {
+      color: #f6e58d;
+      opacity: 0.8;
+      text-decoration: none;
+    }
+
+    .email {
+      color: #ffffffcc;
+      text-decoration: none;
+    }
+
+    .email:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <img id="img1" class="bg" />
+  <img id="img2" class="bg" style="opacity:0;" />
+
+  <div class="contact">
+    <div class="label">Contact:</div>
+    <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
+  </div>
+
+  <script>
+    const filenames = [
+      "IMG_0664.jpeg", "IMG_0663.jpeg", "IMG_0662.jpeg",
+      "IMG_0661.jpeg", "IMG_0660.jpeg", "IMG_0659.jpeg",
+      "IMG_0658.jpeg", "IMG_0657.jpeg", "IMG_0656.jpeg",
+      "IMG_0654.jpeg", "IMG_0653.jpeg", "IMG_0652.jpeg",
+      "IMG_0875.jpeg", "IMG_0877.jpeg", "IMG_0879.jpeg"
+    ];
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
+      return arr;
+    }
 
-      .background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        object-fit: cover;
-        z-index: -2;
-        animation: zoom 30s ease-in-out infinite alternate;
-        filter: brightness(0.5) contrast(1.2);
-      }
+    function getRandomTransform() {
+      const scaleStart = 1.2 + Math.random() * 0.5;
+      const scaleEnd = 1.2 + Math.random() * 0.5;
+      const xStart = (Math.random() - 0.5) * 40;
+      const yStart = (Math.random() - 0.5) * 40;
+      const xEnd = (Math.random() - 0.5) * 40;
+      const yEnd = (Math.random() - 0.5) * 40;
+      return {
+        start: `scale(${scaleStart}) translate(${xStart}px, ${yStart}px)`,
+        end: `scale(${scaleEnd}) translate(${xEnd}px, ${yEnd}px)`
+      };
+    }
 
-      @keyframes zoom {
-        0% {
-          transform: scale(1);
-        }
-        100% {
-          transform: scale(1.1);
-        }
-      }
+    const shuffled = shuffle(filenames.slice());
+    let index = 0, currentImg = 1;
+    const img1 = document.getElementById("img1");
+    const img2 = document.getElementById("img2");
 
-      .contact {
-        position: absolute;
-        bottom: 2vh;
-        right: 2vw;
-        z-index: 10;
-        font-size: 5.5vw;
-        font-weight: bold;
-        pointer-events: auto;
-      }
+    function transitionNext() {
+      const nextIndex = (index + 1) % shuffled.length;
+      const nextFile = shuffled[nextIndex];
+      const current = currentImg === 1 ? img1 : img2;
+      const next = currentImg === 1 ? img2 : img1;
+      const { start, end } = getRandomTransform();
+      const { end: currentEnd } = getRandomTransform();
 
-      .label {
-        color: rgba(255, 217, 102, 0.75); /* soft yellow */
-        text-shadow: 1px 1px 3px black;
-        margin-right: 0.5vw;
-        mix-blend-mode: lighten;
-        display: inline-block;
-      }
+      next.src = nextFile;
+      next.style.transition = "none";
+      next.style.opacity = 0;
+      next.style.transform = start;
 
-      .email {
-        color: rgba(255, 255, 255, 0.7); /* faint white */
-        text-decoration: none;
-        text-shadow: 1px 1px 2px black;
-        mix-blend-mode: lighten;
-      }
+      next.onload = () => {
+        requestAnimationFrame(() => {
+          next.style.transition = "opacity 1.2s ease-in-out, transform 3.2s ease-in-out";
+          current.style.transition = "opacity 1.2s ease-in-out, transform 3.2s ease-in-out";
+          next.style.opacity = 1;
+          next.style.transform = end;
+          current.style.opacity = 0;
+          current.style.transform = currentEnd;
+          index = nextIndex;
+          currentImg = currentImg === 1 ? 2 : 1;
+          setTimeout(transitionNext, 3200);
+        });
+      };
+    }
 
-      .email:hover {
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <img
-      class="background"
-      id="bg"
-      src="https://assets.lomography.com/f2/9d2309fc89c311f47f308b9691da8f221a85f0/798x600x2.jpg?auth=b9b8235c70098d563ac83258cb5016b7d73f8a53"
-      alt="Background"
-    />
-
-    <div class="contact">
-      <span class="label">Contact:</span>
-      <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
-    </div>
-  </body>
+    img1.src = shuffled[0];
+    img1.style.opacity = 1;
+    img1.style.transform = "scale(1.3)";
+    setTimeout(transitionNext, 3200);
+  </script>
+</body>
 </html>
