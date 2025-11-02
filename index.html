@@ -1,120 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>jrcznsk.com</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zuzanna Jarczynska | Agentforce and Salesforce Expert</title>
 
-  <!-- Include Rock Salt font from Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
-
+  <!-- Salesforce fonts and style references -->
+  <link href="https://www.salesforce.com/etc/clientlibs/sfdc-www/clientlibs/sfdc-www.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Salesforce+Sans:wght@400;600&display=swap" rel="stylesheet">
+  
   <style>
-    html, body {
+    body {
+      font-family: 'Salesforce Sans', 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(180deg,#0b5cab 0%,#001639 100%);
+      color: #fff;
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      background: black;
-      height: 100%;
-      width: 100%;
+      text-align: center;
     }
-
-    .bg img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      will-change: transform, opacity;
-      transition: opacity 1.2s ease-in-out, transform 20s ease-in-out;
+    header {
+      padding: 80px 20px 40px;
     }
-
-    .contact {
-      position: absolute;
-      bottom: 2vh;
-      right: 2vw;
-      font-family: 'Rock Salt', cursive;
-      font-size: 6vw;
-      z-index: 10;
-      pointer-events: auto;
+    header img {
+      width: 160px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #d8e6ff;
+      font-size: 1.1rem;
+      margin-bottom: 60px;
+    }
+    .links {
       display: flex;
-      gap: 1vw;
-      align-items: baseline;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      max-width: 400px;
+      margin: 0 auto 60px;
     }
-
-    .contact .label {
-      color: rgba(226, 201, 122, 0.7); /* faded yellow */
-    }
-
-    .contact .email {
-      color: rgba(255, 255, 255, 0.7); /* faint white */
+    a.button {
+      display: block;
+      width: 100%;
+      background: #0176d3;
+      color: #fff;
       text-decoration: none;
+      font-weight: 600;
+      padding: 15px;
+      border-radius: 6px;
+      transition: background 0.3s;
     }
-
-    .contact .email:hover {
-      text-decoration: underline;
+    a.button:hover {
+      background: #0b5cab;
     }
-
-    @media (min-width: 768px) {
-      .contact {
-        font-size: 3vw;
-      }
+    footer {
+      font-size: 0.9rem;
+      color: #a4c2f4;
+      margin-bottom: 40px;
     }
   </style>
 </head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ852Y340W"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-DJ852Y340W');
-</script>
 <body>
-  <div class="bg">
-    <img id="img1" />
-  </div>
 
-  <div class="contact">
-    <span class="label">Contact:</span>
-    <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
-  </div>
+  <header>
+    <img src="https://wp.sfdcdigital.com/en-us/wp-content/uploads/sites/4/2025/10/image.webp?resize=1536,1373" alt="Agentforce" style="width:100%; height:auto;">
+    <h1>Zuzanna Jarczynska</h1>
+    <p>Salesforce Marketing Cloud • Data Cloud • Agentforce Marketing</p>
+  </header>
 
-  <script>
-    const filenames = [
-      "IMG_1498.jpeg"
-    ];
+  <section class="links">
+  <a class="button" href="https://sfmarketing.cloud" target="_blank">
+    sfmarketing.cloud (Marketing Cloud Blog)
+  </a>
+  <a class="button" href="https://open.spotify.com/show/5HatvfFPhVXiiNO64LoNfJ?si=MXUKOMhaTPatkfCKdh4L9A" target="_blank">
+    Inside Marketing Cloud (Marketing Cloud Podcast)
+  </a>
+  <a class="button" href="https://ampscript.io" target="_blank">
+    ampscript.io (AMPscript Editor & Validator)
+  </a>
+  <a class="button" href="https://dataviews.io" target="_blank">
+    dataviews.io (Data Views Guide)
+  </a>
+  <a class="button" href="https://linkedin.com/in/zuzannajarczynska" target="_blank">
+    My LinkedIn
+  </a>
+  <a class="button" href="mailto:zuzanna@agentforce.marketing">
+    Contact
+  </a>
+</sectionr>
 
-    function getRandomTransform() {
-      const scaleStart = 1.2 + Math.random() * 0.5;
-      const scaleEnd = 1.2 + Math.random() * 0.5;
-      const xStart = (Math.random() - 0.5) * 40;
-      const yStart = (Math.random() - 0.5) * 40;
-      const xEnd = (Math.random() - 0.5) * 40;
-      const yEnd = (Math.random() - 0.5) * 40;
-      return {
-        start: `scale(${scaleStart}) translate(${xStart}px, ${yStart}px)`,
-        end: `scale(${scaleEnd}) translate(${xEnd}px, ${yEnd}px)`
-      };
-    }
+  <footer>
+    © 2025 Zuzanna Jarczynska. Created by Zuzanna Jarczynska, Inspired by Salesforce.
+  </footer>
 
-    // pick ONE random file at load
-    const randomFile = filenames[Math.floor(Math.random() * filenames.length)];
-    const { start, end } = getRandomTransform();
-    const img1 = document.getElementById("img1");
-
-    img1.src = randomFile;
-    img1.style.opacity = 0;
-    img1.style.transform = start;
-
-    img1.onload = () => {
-      requestAnimationFrame(() => {
-        img1.style.opacity = 1;
-        img1.style.transform = end;
-      });
-    };
-  </script>
 </body>
 </html>
