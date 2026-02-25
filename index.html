@@ -83,7 +83,7 @@
   </div>
 
   <script>
-    const filenames = [
+const filenames = [
   "IMG_0875.jpeg",
   "IMG_0877.jpeg",
   "IMG_0879.jpeg",
@@ -95,34 +95,53 @@
   "IMG_1498.jpeg"
 ];
 
-    function getRandomTransform() {
-      const scaleStart = 1.2 + Math.random() * 0.5;
-      const scaleEnd = 1.2 + Math.random() * 0.5;
-      const xStart = (Math.random() - 0.5) * 40;
-      const yStart = (Math.random() - 0.5) * 40;
-      const xEnd = (Math.random() - 0.5) * 40;
-      const yEnd = (Math.random() - 0.5) * 40;
-      return {
-        start: `scale(${scaleStart}) translate(${xStart}px, ${yStart}px)`,
-        end: `scale(${scaleEnd}) translate(${xEnd}px, ${yEnd}px)`
-      };
-    }
+const bg = document.querySelector(".bg");
 
-    // pick ONE random file at load
-    const randomFile = filenames[Math.floor(Math.random() * filenames.length)];
-    const { start, end } = getRandomTransform();
-    const img1 = document.getElementById("img1");
+// create two image layers
+const imgA = document.createElement("img");
+const imgB = document.createElement("img");
+bg.appendChild(imgA);
+bg.appendChild(imgB);
 
-    img1.src = randomFile;
-    img1.style.opacity = 0;
-    img1.style.transform = start;
+let current = imgA;
+let next = imgB;
+let currentIndex = 0;
 
-    img1.onload = () => {
-      requestAnimationFrame(() => {
-        img1.style.opacity = 1;
-        img1.style.transform = end;
-      });
-    };
-  </script>
+function randomTransform() {
+  const scale = 1.15 + Math.random() * 0.4;
+  const x = (Math.random() - 0.5) * 60;
+  const y = (Math.random() - 0.5) * 60;
+  return `scale(${scale}) translate(${x}px, ${y}px)`;
+}
+
+function showNextImage() {
+  currentIndex = (currentIndex + 1) % filenames.length;
+
+  next.src = filenames[currentIndex];
+  next.style.transition = "none";
+  next.style.opacity = 0;
+  next.style.transform = randomTransform();
+
+  next.onload = () => {
+    requestAnimationFrame(() => {
+      next.style.transition = "opacity 2s ease, transform 10s ease";
+      current.style.opacity = 0;
+      next.style.opacity = 1;
+      next.style.transform = randomTransform();
+
+      // swap layers
+      [current, next] = [next, current];
+    });
+  };
+}
+
+// initial image
+current.src = filenames[currentIndex];
+current.style.opacity = 1;
+current.style.transform = randomTransform();
+
+// change every 8 seconds
+setInterval(showNextImage, 8000);
+</script>
 </body>
 </html>
