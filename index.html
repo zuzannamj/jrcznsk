@@ -17,7 +17,7 @@
       width: 100%;
     }
 
-    /* SLIDER */
+     /* SLIDER */
 
     .slider {
       position: fixed;
@@ -28,9 +28,23 @@
       overflow: hidden;
     }
 
-  .slider { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; } 
-    .track { display: flex; height: 100%; animation: slide 5s linear infinite; } 
-    @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .track {
+      display: flex;
+      height: 100%;
+      animation: slide 5s linear infinite; /* SPEED HERE */
+    }
+
+.track {
+  display: flex;
+  width: calc(200%); /* duplicated images */
+  height: 100%;
+  animation: slide 5s linear infinite; /* adjust duration */
+}
+
+@keyframes slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); } /* move half of the duplicated width */
+}
 
     /* CONTACT */
 
