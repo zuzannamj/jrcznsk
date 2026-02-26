@@ -1,20 +1,156 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>jrcznsk.com</title>
-      <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
-      <style> html, body { margin: 0; padding: 0; overflow: hidden; background: black; height: 100%; width: 100%; } 
-         /* SLIDER */ .slider { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; } .track { display: flex; height: 100%; animation: slide 10s linear infinite; /* SPEED HERE */ } .track { display: flex; width: calc(200%); /* duplicated images */ height: 100%; animation: slide 30s linear infinite; /* adjust duration */ } @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } /* move half of the duplicated width */ } 
-         /* CONTACT */ .contact { position: absolute; bottom: 2vh; right: 2vw; font-family: 'Rock Salt', cursive; font-size: 6vw; z-index: 10; pointer-events: auto; display: flex; gap: 1vw; align-items: baseline; } .contact .label { color: rgba(226, 201, 122, 0.7); } .contact .email { color: rgba(255, 255, 255, 0.7); text-decoration: none; } .contact .email:hover { text-decoration: underline; } @media (min-width: 768px) { .contact { font-size: 3vw; } } </style>
-   </head>
-   <!-- Google Analytics --> <script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ852Y340W"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-DJ852Y340W'); </script> 
-   <body>
-      <div class="slider">
-         <div class="track" id="track"></div>
-      </div>
-      <div class="contact"> <span class="label">Contact:</span> <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a> </div>
-      <script> const filenames = [ "IMG_0875.jpeg", "IMG_0877.jpeg", "IMG_0879.jpeg", "IMG_0916.jpeg", "IMG_0917.jpeg", "IMG_0919.jpeg", "IMG_0921.jpeg", "IMG_0923.jpeg", "IMG_1498.jpeg" ]; const track = document.getElementById("track"); // duplicate array for seamless infinite loop const images = [...filenames, ...filenames]; images.forEach(src => { const img = document.createElement("img"); img.src = src; track.appendChild(img); }); </script> 
-   </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>jrcznsk.com</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: black;
+  height: 100%;
+  width: 100%;
+}
+
+/* SLIDER */
+
+.slider {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  height: 100%;
+}
+
+.track img {
+  height: 100vh;     /* keeps full height */
+  width: auto;       /* preserves aspect ratio */
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* CONTACT */
+
+.contact {
+  position: absolute;
+  bottom: 2vh;
+  right: 2vw;
+  font-family: 'Rock Salt', cursive;
+  font-size: 6vw;
+  z-index: 10;
+  pointer-events: auto;
+  display: flex;
+  gap: 1vw;
+  align-items: baseline;
+}
+
+.contact .label {
+  color: rgba(226, 201, 122, 0.7);
+}
+
+.contact .email {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+}
+
+.contact .email:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+  .contact {
+    font-size: 3vw;
+  }
+}
+</style>
+</head>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ852Y340W"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DJ852Y340W');
+</script>
+
+<body>
+
+<div class="slider">
+  <div class="track" id="track"></div>
+</div>
+
+<div class="contact">
+  <span class="label">Contact:</span>
+  <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
+</div>
+
+<script>
+const filenames = [
+  "IMG_0875.jpeg",
+  "IMG_0877.jpeg",
+  "IMG_0879.jpeg",
+  "IMG_0916.jpeg",
+  "IMG_0917.jpeg",
+  "IMG_0919.jpeg",
+  "IMG_0921.jpeg",
+  "IMG_0923.jpeg",
+  "IMG_1498.jpeg"
+];
+
+const track = document.getElementById("track");
+
+// duplicate images for seamless loop
+const images = [...filenames, ...filenames];
+
+let loadedCount = 0;
+
+images.forEach(src => {
+  const img = document.createElement("img");
+  img.src = src;
+
+  img.onload = () => {
+    loadedCount++;
+    if (loadedCount === images.length) {
+      startSlider();
+    }
+  };
+
+  track.appendChild(img);
+});
+
+function startSlider() {
+
+  const oneSetWidth = track.scrollWidth / 2;
+
+  const speed = 120; // pixels per second (adjust this)
+
+  const duration = oneSetWidth / speed;
+
+  track.animate(
+    [
+      { transform: "translateX(0px)" },
+      { transform: `translateX(-${oneSetWidth}px)` }
+    ],
+    {
+      duration: duration * 1000,
+      iterations: Infinity,
+      easing: "linear"
+    }
+  );
+}
+</script>
+
+</body>
 </html>
