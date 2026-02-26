@@ -34,17 +34,17 @@
       animation: slide 10s linear infinite; /* SPEED HERE */
     }
 
-    .track img {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
+.track {
+  display: flex;
+  width: calc(200%); /* duplicated images */
+  height: 100%;
+  animation: slide 30s linear infinite; /* adjust duration */
+}
 
-    @keyframes slide {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
+@keyframes slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); } /* move half of the duplicated width */
+}
 
     /* CONTACT */
 
