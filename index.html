@@ -86,49 +86,24 @@
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ852Y340W"></script>
 <script>
-const filenames = [
-  "IMG_0875.jpeg",
-  "IMG_0877.jpeg",
-  "IMG_0879.jpeg",
-  "IMG_0916.jpeg",
-  "IMG_0917.jpeg",
-  "IMG_0919.jpeg",
-  "IMG_0921.jpeg",
-  "IMG_0923.jpeg",
-  "IMG_1498.jpeg"
-];
-
-const track = document.getElementById("track");
-
-// duplicate for seamless loop
-const images = [...filenames, ...filenames];
-
-images.forEach(src => {
-  const img = document.createElement("img");
-  img.src = src;
-  track.appendChild(img);
-});
-
-function startAnimation() {
-  const totalWidth = track.scrollWidth / 2;
-  const speed = 1000; // pixels per second (increase = faster)
-
-  const duration = totalWidth / speed;
-
-  track.style.animation = `slide ${duration}s linear infinite`;
-
-  const style = document.createElement("style");
-  style.innerHTML = `
-    @keyframes slide {
-      from { transform: translateX(0); }
-      to { transform: translateX(-${totalWidth}px); }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-window.onload = startAnimation;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-DJ852Y340W');
 </script>
+
+<body>
+
+  <div class="slider">
+    <div class="track" id="track"></div>
+  </div>
+
+  <div class="contact">
+    <span class="label">Contact:</span>
+    <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
+  </div>
+
+<script>
 const filenames = [
   "IMG_0875.jpeg",
   "IMG_0877.jpeg",
