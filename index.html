@@ -114,41 +114,43 @@ const track = document.getElementById("track");
 // duplicate images for seamless loop
 const images = [...filenames, ...filenames];
 
-let loadedCount = 0;
+let loaded = 0;
 
 images.forEach(src => {
   const img = document.createElement("img");
   img.src = src;
-
   img.onload = () => {
-    loadedCount++;
-    if (loadedCount === images.length) {
-      startSlider();
-    }
+    loaded++;
+    if (loaded === images.length) initSlider();
   };
-
   track.appendChild(img);
 });
 
-function startSlider() {
+function initSlider() {
 
   const oneSetWidth = track.scrollWidth / 2;
+  const speed = 120; // pixels per second
 
-  const speed = 120; // pixels per second (adjust this)
+  let position = 0;
+  let lastTime = null;
 
-  const duration = oneSetWidth / speed;
+  function animate(time) {
+    if (!lastTime) lastTime = time;
+    const delta = (time - lastTime) / 1000; // seconds since last frame
+    lastTime = time;
 
-  track.animate(
-    [
-      { transform: "translateX(0px)" },
-      { transform: `translateX(-${oneSetWidth}px)` }
-    ],
-    {
-      duration: duration * 1000,
-      iterations: Infinity,
-      easing: "linear"
+    position += speed * delta;
+
+    if (position >= oneSetWidth) {
+      position -= oneSetWidth;
     }
-  );
+
+    track.style.transform = `translateX(-${position}px)`;
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
 }
 </script>
 
