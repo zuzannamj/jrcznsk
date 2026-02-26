@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>jrcznsk.com</title>
 
-  <!-- Include Rock Salt font from Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
 
   <style>
@@ -18,17 +17,36 @@
       width: 100%;
     }
 
-    .bg img {
-      position: absolute;
+    /* SLIDER */
+
+    .slider {
+      position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      will-change: transform, opacity;
-      transition: opacity 1.2s ease-in-out, transform 8s ease-in-out;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
     }
+
+    .track {
+      display: flex;
+      height: 100%;
+      animation: slide 10s linear infinite; /* SPEED HERE */
+    }
+
+    .track img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    @keyframes slide {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* CONTACT */
 
     .contact {
       position: absolute;
@@ -44,11 +62,11 @@
     }
 
     .contact .label {
-      color: rgba(226, 201, 122, 0.7); /* faded yellow */
+      color: rgba(226, 201, 122, 0.7);
     }
 
     .contact .email {
-      color: rgba(255, 255, 255, 0.7); /* faint white */
+      color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
     }
 
@@ -61,18 +79,21 @@
         font-size: 3vw;
       }
     }
+
   </style>
 </head>
-  <!-- Google tag (gtag.js) -->
+
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ852Y340W"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-DJ852Y340W');
 </script>
+
 <body>
+
   <div class="slider">
     <div class="track" id="track"></div>
   </div>
@@ -97,7 +118,7 @@ const filenames = [
 
 const track = document.getElementById("track");
 
-// duplicate array so it loops seamlessly
+// duplicate array for seamless infinite loop
 const images = [...filenames, ...filenames];
 
 images.forEach(src => {
@@ -106,5 +127,6 @@ images.forEach(src => {
   track.appendChild(img);
 });
 </script>
+
 </body>
 </html>
