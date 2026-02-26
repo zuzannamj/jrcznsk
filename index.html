@@ -73,8 +73,8 @@
   gtag('config', 'G-DJ852Y340W');
 </script>
 <body>
-  <div class="bg">
-    <img id="img1" />
+  <div class="slider">
+    <div class="track" id="track"></div>
   </div>
 
   <div class="contact">
@@ -82,7 +82,7 @@
     <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
   </div>
 
-  <script>
+<script>
 const filenames = [
   "IMG_0875.jpeg",
   "IMG_0877.jpeg",
@@ -95,53 +95,16 @@ const filenames = [
   "IMG_1498.jpeg"
 ];
 
-const bg = document.querySelector(".bg");
+const track = document.getElementById("track");
 
-// create two image layers
-const imgA = document.createElement("img");
-const imgB = document.createElement("img");
-bg.appendChild(imgA);
-bg.appendChild(imgB);
+// duplicate array so it loops seamlessly
+const images = [...filenames, ...filenames];
 
-let current = imgA;
-let next = imgB;
-let currentIndex = 0;
-
-function randomTransform() {
-  const scale = 1.15 + Math.random() * 0.4;
-  const x = (Math.random() - 0.5) * 60;
-  const y = (Math.random() - 0.5) * 60;
-  return `scale(${scale}) translate(${x}px, ${y}px)`;
-}
-
-function showNextImage() {
-  currentIndex = (currentIndex + 1) % filenames.length;
-
-  next.src = filenames[currentIndex];
-  next.style.transition = "none";
-  next.style.opacity = 0;
-  next.style.transform = randomTransform();
-
-  next.onload = () => {
-    requestAnimationFrame(() => {
-      next.style.transition = "opacity 2s ease, transform 10s ease";
-      current.style.opacity = 0;
-      next.style.opacity = 1;
-      next.style.transform = randomTransform();
-
-      // swap layers
-      [current, next] = [next, current];
-    });
-  };
-}
-
-// initial image
-current.src = filenames[currentIndex];
-current.style.opacity = 1;
-current.style.transform = randomTransform();
-
-// change every 8 seconds
-setInterval(showNextImage, 8000);
+images.forEach(src => {
+  const img = document.createElement("img");
+  img.src = src;
+  track.appendChild(img);
+});
 </script>
 </body>
 </html>
