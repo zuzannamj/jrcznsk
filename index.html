@@ -95,7 +95,6 @@ gtag('config', 'G-DJ852Y340W');
   <span class="label">Contact:</span>
   <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
 </div>
-
 <script>
 const filenames = [
   "IMG_3587.jpeg",
@@ -108,50 +107,27 @@ const filenames = [
   "IMG_3600.jpeg"
 ];
 
-const track = document.getElementById("track");
+// pick random image
+const randomImage = filenames[Math.floor(Math.random() * filenames.length)];
 
-// duplicate images for seamless loop
-const images = [...filenames, ...filenames];
+// remove slider structure
+const slider = document.querySelector(".slider");
+slider.innerHTML = "";
 
-let loaded = 0;
+// create single image
+const img = document.createElement("img");
+img.src = randomImage;
 
-images.forEach(src => {
-  const img = document.createElement("img");
-  img.src = src;
-  img.onload = () => {
-    loaded++;
-    if (loaded === images.length) initSlider();
-  };
-  track.appendChild(img);
-});
+img.style.position = "fixed";
+img.style.top = "0";
+img.style.left = "0";
+img.style.width = "100vw";
+img.style.height = "100vh";
+img.style.objectFit = "cover";     // always fill viewport
+img.style.objectPosition = "center center"; // always center
+img.style.zIndex = "0";
 
-function initSlider() {
-
-  const oneSetWidth = track.scrollWidth / 2;
-  const speed = 120; // pixels per second
-
-  let position = 0;
-  let lastTime = null;
-
-  function animate(time) {
-    if (!lastTime) lastTime = time;
-    const delta = (time - lastTime) / 1000; // seconds since last frame
-    lastTime = time;
-
-    position += speed * delta;
-
-    if (position >= oneSetWidth) {
-      position -= oneSetWidth;
-    }
-
-    track.style.transform = `translateX(-${position}px)`;
-
-    requestAnimationFrame(animate);
-  }
-
-  requestAnimationFrame(animate);
-}
+document.body.appendChild(img);
 </script>
-
 </body>
 </html>
