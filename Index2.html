@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>jrcznsk.com</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: black;
+  height: 100%;
+  width: 100%;
+}
+
+/* COLUMNS */
+
+.columns {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.col img {
+  width: 100%;
+  height: 50vh;
+  object-fit: cover;
+  object-position: center;
+  flex-shrink: 0;
+}
+
+/* CONTACT — same placement as original */
+
+.contact {
+  position: fixed;
+  bottom: 2vh;
+  right: 2vw;
+  font-family: 'Rock Salt', cursive;
+  font-size: 6vw;
+  z-index: 10;
+  pointer-events: auto;
+  display: flex;
+  gap: 1vw;
+  align-items: baseline;
+}
+
+.contact .label {
+  color: rgba(226, 201, 122, 0.7);
+}
+
+.contact .email {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+}
+
+.contact .email:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+  .contact {
+    font-size: 3vw;
+  }
+}
+</style>
+
+<!-- Google Analytics (RESTORED) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ852Y340W"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DJ852Y340W');
+</script>
+
+</head>
+<body>
+
+<div class="columns">
+  <div class="col" id="col1"></div>
+  <div class="col" id="col2"></div>
+  <div class="col" id="col3"></div>
+</div>
+
+<div class="contact">
+  <span class="label">Contact:</span>
+  <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
+</div>
+
+<script>
+// IMAGE ARRAYS
+
+const col1Images = [
+  "IMG_3587.jpeg",
+  "IMG_3592.jpeg",
+  "IMG_3590.jpeg"
+];
+
+const col2Images = [
+  "IMG_3591.jpeg",
+  "IMG_3588.jpeg",
+  "IMG_3598.jpeg"
+];
+
+const col3Images = [
+  "IMG_3596.jpeg",
+  "IMG_3600.jpeg",
+  "IMG_3587.jpeg"
+];
+
+// Shuffle
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function populateColumn(columnId, images) {
+  const col = document.getElementById(columnId);
+  const shuffled = shuffle([...images]);
+
+  const fullSet = [...shuffled, ...shuffled];
+
+  fullSet.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    col.appendChild(img);
+  });
+
+  return col.scrollHeight / 2;
+}
+
+const h1 = populateColumn("col1", col1Images);
+const h2 = populateColumn("col2", col2Images);
+const h3 = populateColumn("col3", col3Images);
+
+let pos1 = 0;
+let pos2 = 0;
+let pos3 = 0;
+
+const speed = 30;
+let lastTime = null;
+
+function animate(time) {
+  if (!lastTime) lastTime = time;
+  const delta = (time - lastTime) / 1000;
+  lastTime = time;
+
+  pos1 += speed * delta;
+  pos2 -= speed * delta;
+  pos3 += speed * delta;
+
+  if (pos1 >= h1) pos1 -= h1;
+  if (pos2 <= -h2) pos2 += h2;
+  if (pos3 >= h3) pos3 -= h3;
+
+  document.getElementById("col1").style.transform = `translateY(-${pos1}px)`;
+  document.getElementById("col2").style.transform = `translateY(${pos2}px)`;
+  document.getElementById("col3").style.transform = `translateY(-${pos3}px)`;
+
+  requestAnimationFrame(animate);
+}
+
+requestAnimationFrame(animate);
+</script>
+
+</body>
+</html>
