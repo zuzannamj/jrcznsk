@@ -118,7 +118,6 @@ const col3Images = [
   "IMG_3972.jpeg","IMG_3975.jpeg","IMG_3984.jpeg","IMG_3987.jpeg"
 ];
 
-// Shuffle helper
 function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
@@ -127,42 +126,63 @@ function buildColumn(id, images, offset = false) {
   const col = document.getElementById(id);
   const shuffled = shuffle(images);
 
-  // FIRST full set
+  // First full set
   shuffled.forEach(src => {
     const img = document.createElement("img");
     img.src = src;
     col.appendChild(img);
   });
 
-  const oneSetHeight = col.scrollHeight;
+  return new Promise(resolve => {
+    // Wait for all images to load before measuring
+    const imgs = col.querySelectorAll("img");
+    let loaded = 0;
 
-  // structural offset only for col3
-  if (offset) {
-    const spacer = document.createElement("div");
-    spacer.className = "spacer";
-    spacer.style.height = (oneSetHeight / 3) + "px";
-    col.prepend(spacer);
-  }
+    imgs.forEach(img => {
+      if (img.complete) {
+        loaded++;
+      } else {
+        img.onload = () => {
+          loaded++;
+          if (loaded === imgs.length) finish();
+        };
+      }
+    });
 
-  // SECOND identical full set (required for seamless loop)
-  shuffled.forEach(src => {
-    const img = document.createElement("img");
-    img.src = src;
-    col.appendChild(img);
+    if (loaded === imgs.length) finish();
+
+    function finish() {
+      const oneSetHeight = col.scrollHeight;
+
+      // structural offset for col3
+      if (offset) {
+        const spacer = document.createElement("div");
+        spacer.className = "spacer";
+        spacer.style.height = (oneSetHeight / 3) + "px";
+        col.prepend(spacer);
+      }
+
+      // Duplicate identical set
+      shuffled.forEach(src => {
+        const img = document.createElement("img");
+        img.src = src;
+        col.appendChild(img);
+      });
+
+      resolve(oneSetHeight);
+    }
   });
-
-  return oneSetHeight;
 }
 
-window.onload = () => {
+window.onload = async () => {
 
   const col1 = document.getElementById("col1");
   const col2 = document.getElementById("col2");
   const col3 = document.getElementById("col3");
 
-  const h1 = buildColumn("col1", col1Images);
-  const h2 = buildColumn("col2", col2Images);
-  const h3 = buildColumn("col3", col3Images, true);
+  const h1 = await buildColumn("col1", col1Images);
+  const h2 = await buildColumn("col2", col2Images);
+  const h3 = await buildColumn("col3", col3Images, true);
 
   let pos1 = 0;
   let pos2 = 0;
@@ -170,6 +190,7 @@ window.onload = () => {
 
   const speedFast = 60;
   const speedSlow = 45;
+  const speedSlightlyFaster = 66; // slightly faster than col1
 
   let lastTime = null;
 
@@ -188,8 +209,8 @@ window.onload = () => {
     if (pos2 >= h2) pos2 -= h2;
     col2.style.transform = `translateY(${pos2 - h2}px)`;
 
-    // Column 3 — UP (offset already structurally applied)
-    pos3 += speedFast * delta;
+    // Column 3 — UP slightly faster
+    pos3 += speedSlightlyFaster * delta;
     if (pos3 >= h3) pos3 -= h3;
     col3.style.transform = `translateY(-${pos3}px)`;
 
