@@ -99,7 +99,7 @@ gtag('config', 'G-DJ852Y340W');
 
 <script>
 
-// --- NEW ARRAYS ---
+// --- ARRAYS ---
 
 const col1Images = [
   "IMG_3955.jpeg","IMG_3961.jpeg","IMG_3973.jpeg","IMG_3982.jpeg",
@@ -123,37 +123,35 @@ function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-function populateColumn(id, images, addOffsetSpacer = false) {
+function buildColumn(id, images, offset = false) {
   const col = document.getElementById(id);
   const shuffled = shuffle(images);
 
-  // Add one real set first
+  // FIRST full set
   shuffled.forEach(src => {
     const img = document.createElement("img");
     img.src = src;
     col.appendChild(img);
   });
 
-  const realSetHeight = col.scrollHeight;
+  const oneSetHeight = col.scrollHeight;
 
-  // Add spacer for structural offset (ONLY for col3)
-  if (addOffsetSpacer) {
+  // structural offset only for col3
+  if (offset) {
     const spacer = document.createElement("div");
     spacer.className = "spacer";
-    spacer.style.height = (realSetHeight / 3) + "px";
+    spacer.style.height = (oneSetHeight / 3) + "px";
     col.prepend(spacer);
   }
 
-  // Duplicate until tall enough
-  while (col.scrollHeight < window.innerHeight * 3) {
-    shuffled.forEach(src => {
-      const img = document.createElement("img");
-      img.src = src;
-      col.appendChild(img);
-    });
-  }
+  // SECOND identical full set (required for seamless loop)
+  shuffled.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    col.appendChild(img);
+  });
 
-  return realSetHeight;
+  return oneSetHeight;
 }
 
 window.onload = () => {
@@ -162,9 +160,9 @@ window.onload = () => {
   const col2 = document.getElementById("col2");
   const col3 = document.getElementById("col3");
 
-  const h1 = populateColumn("col1", col1Images);
-  const h2 = populateColumn("col2", col2Images);
-  const h3 = populateColumn("col3", col3Images, true); // TRUE OFFSET HERE
+  const h1 = buildColumn("col1", col1Images);
+  const h2 = buildColumn("col2", col2Images);
+  const h3 = buildColumn("col3", col3Images, true);
 
   let pos1 = 0;
   let pos2 = 0;
@@ -190,7 +188,7 @@ window.onload = () => {
     if (pos2 >= h2) pos2 -= h2;
     col2.style.transform = `translateY(${pos2 - h2}px)`;
 
-    // Column 3 — UP (structural offset already applied)
+    // Column 3 — UP (offset already structurally applied)
     pos3 += speedFast * delta;
     if (pos3 >= h3) pos3 -= h3;
     col3.style.transform = `translateY(-${pos3}px)`;
