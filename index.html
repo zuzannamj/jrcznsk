@@ -83,7 +83,6 @@ html, body {
 </div>
 
 <div class="contact">Contact: zu@jrcznsk.com</div>
-
 <script>
 const col1Images = [
 "IMG_3955.jpeg","IMG_3961.jpeg","IMG_3973.jpeg","IMG_3982.jpeg",
@@ -111,23 +110,23 @@ function buildColumn(images, trackId) {
   const track = document.getElementById(trackId);
   shuffle(images);
 
-  // duplicate enough times to exceed 200vh safely
-  const repeated = [];
-  for (let i = 0; i < 6; i++) {
-    repeated.push(...images);
-  }
-
-  repeated.forEach(src => {
+  // Build once
+  images.forEach(src => {
     const img = document.createElement("img");
     img.src = src;
     track.appendChild(img);
   });
+
+  // Clone entire content once (this is the key fix)
+  const clone = track.cloneNode(true);
+  while (clone.firstChild) {
+    track.appendChild(clone.firstChild);
+  }
 }
 
 buildColumn(col1Images, "track1");
 buildColumn(col2Images, "track2");
 buildColumn(col3Images, "track3");
 </script>
-
 </body>
 </html>
