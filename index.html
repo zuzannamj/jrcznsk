@@ -1,206 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>jrcznsk.com</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
+  background: #000;
   overflow: hidden;
-  background: black;
-  height: 100%;
-  width: 100%;
 }
 
-.columns {
-  position: fixed;
-  inset: 0;
+.wrapper {
   display: flex;
-  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
 }
 
-.col {
+.column {
   flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.track {
   display: flex;
   flex-direction: column;
-  will-change: transform;
 }
 
-.col img {
+.column img {
   width: 100%;
-  height: 50vh;
-  object-fit: cover;
-  object-position: center;
-  flex-shrink: 0;
+  height: auto;
+  display: block;
 }
 
-.spacer {
-  width: 100%;
-  flex-shrink: 0;
+.col1 .track {
+  animation: scrollUp 40s linear infinite;
+}
+
+.col2 .track {
+  animation: scrollDown 55s linear infinite;
+}
+
+.col3 .track {
+  animation: scrollUp 40s linear infinite;
+}
+
+/* offset column 3 */
+.col3 .track {
+  animation-delay: -13s;
+}
+
+@keyframes scrollUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes scrollDown {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
 }
 
 .contact {
   position: fixed;
-  bottom: 2vh;
-  right: 2vw;
-  font-family: 'Rock Salt', cursive;
-  font-size: 6vw;
+  bottom: 20px;
+  left: 20px;
+  color: #e8d8b0;
+  font-size: 28px;
+  font-family: cursive;
   z-index: 10;
-  display: flex;
-  gap: 1vw;
-  align-items: baseline;
-}
-
-.contact .label {
-  color: rgba(226, 201, 122, 0.7);
-}
-
-.contact .email {
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-}
-
-.contact .email:hover {
-  text-decoration: underline;
-}
-
-@media (min-width: 768px) {
-  .contact { font-size: 3vw; }
 }
 </style>
-
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ852Y340W"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-DJ852Y340W');
-</script>
-
 </head>
 <body>
 
-<div class="columns">
-  <div class="col" id="col1"></div>
-  <div class="col" id="col2"></div>
-  <div class="col" id="col3"></div>
+<div class="wrapper">
+  <div class="column col1"><div class="track" id="track1"></div></div>
+  <div class="column col2"><div class="track" id="track2"></div></div>
+  <div class="column col3"><div class="track" id="track3"></div></div>
 </div>
 
-<div class="contact">
-  <span class="label">Contact:</span>
-  <a class="email" href="mailto:zu@jrcznsk.com">zu@jrcznsk.com</a>
-</div>
+<div class="contact">Contact: zu@jrcznsk.com</div>
 
 <script>
-
-// --- NEW ARRAYS ---
-
 const col1Images = [
-  "IMG_3955.jpeg","IMG_3961.jpeg","IMG_3973.jpeg","IMG_3982.jpeg",
-  "IMG_3967.jpeg","IMG_3976.jpeg","IMG_3989.jpeg","IMG_3962.jpeg",
-  "IMG_3978.jpeg"
+"IMG_3955.jpeg","IMG_3961.jpeg","IMG_3973.jpeg","IMG_3982.jpeg",
+"IMG_3967.jpeg","IMG_3976.jpeg","IMG_3989.jpeg","IMG_3962.jpeg","IMG_3978.jpeg"
 ];
 
 const col2Images = [
-  "IMG_3956.jpeg","IMG_3963.jpeg","IMG_3974.jpeg","IMG_3983.jpeg",
-  "IMG_3970.jpeg","IMG_3977.jpeg","IMG_3986.jpeg","IMG_3969.jpeg",
-  "IMG_3979.jpeg"
+"IMG_3956.jpeg","IMG_3963.jpeg","IMG_3974.jpeg","IMG_3983.jpeg",
+"IMG_3970.jpeg","IMG_3977.jpeg","IMG_3986.jpeg","IMG_3969.jpeg","IMG_3979.jpeg"
 ];
 
 const col3Images = [
-  "IMG_3957.jpeg","IMG_3958.jpeg","IMG_3960.jpeg","IMG_3971.jpeg",
-  "IMG_3972.jpeg","IMG_3975.jpeg","IMG_3984.jpeg","IMG_3987.jpeg"
+"IMG_3957.jpeg","IMG_3958.jpeg","IMG_3960.jpeg","IMG_3971.jpeg",
+"IMG_3972.jpeg","IMG_3975.jpeg","IMG_3984.jpeg","IMG_3987.jpeg"
 ];
 
-// Shuffle helper
-function shuffle(arr) {
-  return [...arr].sort(() => Math.random() - 0.5);
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
-function populateColumn(id, images, addOffsetSpacer = false) {
-  const col = document.getElementById(id);
-  const shuffled = shuffle(images);
+function buildColumn(images, trackId) {
+  const track = document.getElementById(trackId);
+  shuffle(images);
 
-  // Add one real set first
-  shuffled.forEach(src => {
+  // duplicate enough times to exceed 200vh safely
+  const repeated = [];
+  for (let i = 0; i < 6; i++) {
+    repeated.push(...images);
+  }
+
+  repeated.forEach(src => {
     const img = document.createElement("img");
     img.src = src;
-    col.appendChild(img);
+    track.appendChild(img);
   });
-
-  const realSetHeight = col.scrollHeight;
-
-  // Add spacer for structural offset (ONLY for col3)
-  if (addOffsetSpacer) {
-    const spacer = document.createElement("div");
-    spacer.className = "spacer";
-    spacer.style.height = (realSetHeight / 3) + "px";
-    col.prepend(spacer);
-  }
-
-  // Duplicate until tall enough
-  while (col.scrollHeight < window.innerHeight * 3) {
-    shuffled.forEach(src => {
-      const img = document.createElement("img");
-      img.src = src;
-      col.appendChild(img);
-    });
-  }
-
-  return realSetHeight;
 }
 
-window.onload = () => {
-
-  const col1 = document.getElementById("col1");
-  const col2 = document.getElementById("col2");
-  const col3 = document.getElementById("col3");
-
-  const h1 = populateColumn("col1", col1Images);
-  const h2 = populateColumn("col2", col2Images);
-  const h3 = populateColumn("col3", col3Images, true); // TRUE OFFSET HERE
-
-  let pos1 = 0;
-  let pos2 = 0;
-  let pos3 = 0;
-
-  const speedFast = 60;
-  const speedSlow = 45;
-
-  let lastTime = null;
-
-  function animate(time) {
-    if (!lastTime) lastTime = time;
-    const delta = (time - lastTime) / 1000;
-    lastTime = time;
-
-    // Column 1 — UP
-    pos1 += speedFast * delta;
-    if (pos1 >= h1) pos1 -= h1;
-    col1.style.transform = `translateY(-${pos1}px)`;
-
-    // Column 2 — DOWN slower
-    pos2 += speedSlow * delta;
-    if (pos2 >= h2) pos2 -= h2;
-    col2.style.transform = `translateY(${pos2 - h2}px)`;
-
-    // Column 3 — UP (structural offset already applied)
-    pos3 += speedFast * delta;
-    if (pos3 >= h3) pos3 -= h3;
-    col3.style.transform = `translateY(-${pos3}px)`;
-
-    requestAnimationFrame(animate);
-  }
-
-  requestAnimationFrame(animate);
-};
-
+buildColumn(col1Images, "track1");
+buildColumn(col2Images, "track2");
+buildColumn(col3Images, "track3");
 </script>
 
 </body>
