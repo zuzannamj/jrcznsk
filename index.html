@@ -96,28 +96,24 @@ gtag('config', 'G-DJ852Y340W');
   <span class="label">Contact:</span>
   <a class="email" href="mailto:zu@jrcznsk.com?subject=[jrcznsk.com]">zu@jrcznsk.com</a>
 </div>
-
 <script>
-
 function buildColumn(id, images, offset = false) {
   const col = document.getElementById(id);
   const shuffled = shuffle(images);
 
-  // Insert TWO identical sets immediately
   for (let i = 0; i < 2; i++) {
     shuffled.forEach(src => {
       const img = document.createElement("img");
       img.src = src;
 
-      // ✅ PERFORMANCE ADDITIONS
-      img.loading = "lazy";
+      // FIX
+      img.loading = "eager";
       img.decoding = "async";
 
       col.appendChild(img);
     });
   }
 
-  // Structural offset for column 3
   if (offset) {
     const oneSetHeight = images.length * window.innerHeight * 0.5;
     const spacer = document.createElement("div");
@@ -128,8 +124,6 @@ function buildColumn(id, images, offset = false) {
 
   return images.length * window.innerHeight * 0.5;
 }
-
 </script>
-
 </body>
 </html>
