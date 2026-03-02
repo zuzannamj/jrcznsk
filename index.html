@@ -123,40 +123,62 @@ function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-function buildColumn(id, images, offset = false) {
-  const col = document.getElementById(id);
-  const shuffled = shuffle(images);
-
-  // Insert TWO identical sets immediately
-  for (let i = 0; i < 2; i++) {
-    shuffled.forEach(src => {
-      const img = document.createElement("img");
-      img.src = src;
-      col.appendChild(img);
-    });
-  }
-
-  // Structural offset for column 3
-  if (offset) {
-    const oneSetHeight = images.length * window.innerHeight * 0.5;
-    const spacer = document.createElement("div");
-    spacer.className = "spacer";
-    spacer.style.height = (oneSetHeight / 3) + "px";
-    col.prepend(spacer);
-  }
-
-  return images.length * window.innerHeight * 0.5;
-}
-
-window.onload = () => {
+function buildColumnsInterleaved() {
 
   const col1 = document.getElementById("col1");
   const col2 = document.getElementById("col2");
   const col3 = document.getElementById("col3");
 
-  const h1 = buildColumn("col1", col1Images);
-  const h2 = buildColumn("col2", col2Images);
-  const h3 = buildColumn("col3", col3Images, true);
+  const shuffled1 = shuffle(col1Images);
+  const shuffled2 = shuffle(col2Images);
+  const shuffled3 = shuffle(col3Images);
+
+  const maxLength = Math.max(
+    shuffled1.length,
+    shuffled2.length,
+    shuffled3.length
+  );
+
+  for (let i = 0; i < maxLength; i++) {
+
+    if (shuffled1[i]) {
+      const img1 = document.createElement("img");
+      img1.src = shuffled1[i];
+      col1.appendChild(img1);
+    }
+
+    if (shuffled2[i]) {
+      const img2 = document.createElement("img");
+      img2.src = shuffled2[i];
+      col2.appendChild(img2);
+    }
+
+    if (shuffled3[i]) {
+      const img3 = document.createElement("img");
+      img3.src = shuffled3[i];
+      col3.appendChild(img3);
+    }
+  }
+
+  // duplicate content for seamless loop
+  col1.innerHTML += col1.innerHTML;
+  col2.innerHTML += col2.innerHTML;
+  col3.innerHTML += col3.innerHTML;
+
+  return {
+    h1: col1Images.length * window.innerHeight * 0.5,
+    h2: col2Images.length * window.innerHeight * 0.5,
+    h3: col3Images.length * window.innerHeight * 0.5
+  };
+}
+
+window.onload = () => {
+
+  const { h1, h2, h3 } = buildColumnsInterleaved();
+
+  const col1 = document.getElementById("col1");
+  const col2 = document.getElementById("col2");
+  const col3 = document.getElementById("col3");
 
   let pos1 = 0;
   let pos2 = 0;
