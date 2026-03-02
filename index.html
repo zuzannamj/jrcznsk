@@ -99,62 +99,24 @@ gtag('config', 'G-DJ852Y340W');
 
 <script>
 
-// --- ARRAYS ---
+// --- WEBP ARRAYS ---
 
-/*const col1Images = [
-  "IMG_3955.jpeg","IMG_3961.jpeg","IMG_3973.jpeg","IMG_3982.jpeg",
-  "IMG_3967.jpeg","IMG_3976.jpeg","IMG_3989.jpeg","IMG_3962.jpeg",
-  "IMG_3978.jpeg"
+const col1Images = [
+  "image00001.webp","image00002.webp","image00003.webp","image00004.webp",
+  "image00005.webp","image00006.webp","image00007.webp","image00008.webp",
+  "image00009.webp","image00010.webp"
 ];
 
 const col2Images = [
-  "IMG_3956.jpeg","IMG_3963.jpeg","IMG_3974.jpeg","IMG_3983.jpeg",
-  "IMG_3970.jpeg","IMG_3977.jpeg","IMG_3986.jpeg","IMG_3969.jpeg",
-  "IMG_3979.jpeg"
+  "image00011.webp","image00012.webp","image00013.webp","image00014.webp",
+  "image00015.webp","image00016.webp","image00017.webp","image00018.webp",
+  "image00019.webp","image00020.webp"
 ];
 
 const col3Images = [
-  "IMG_3957.jpeg","IMG_3958.jpeg","IMG_3960.jpeg","IMG_3971.jpeg",
-  "IMG_3972.jpeg","IMG_3975.jpeg","IMG_3984.jpeg","IMG_3987.jpeg"
-];*/
-
-  const col1Images = [
-  "image00001.webp",
-  "image00002.webp",
-  "image00003.webp",
-  "image00004.webp",
-  "image00005.webp",
-  "image00006.webp",
-  "image00007.webp",
-  "image00008.webp",
-  "image00009.webp",
-  "image00010.webp"
-];
-
-const col2Images = [
-  "image00011.webp",
-  "image00012.webp",
-  "image00013.webp",
-  "image00014.webp",
-  "image00015.webp",
-  "image00016.webp",
-  "image00017.webp",
-  "image00018.webp",
-  "image00019.webp",
-  "image00020.webp"
-];
-
-const col3Images = [
-  "image00021.webp",
-  "image00022.webp",
-  "image00023.webp",
-  "image00024.webp",
-  "image00025.webp",
-  "image00026.webp",
-  "image00027.webp",
-  "image00028.webp",
-  "image00029.webp",
-  "image00030.webp"
+  "image00021.webp","image00022.webp","image00023.webp","image00024.webp",
+  "image00025.webp","image00026.webp","image00027.webp","image00028.webp",
+  "image00029.webp","image00030.webp"
 ];
 
 function shuffle(arr) {
@@ -165,63 +127,36 @@ function buildColumn(id, images, offset = false) {
   const col = document.getElementById(id);
   const shuffled = shuffle(images);
 
-  // First full set
-  shuffled.forEach(src => {
-    const img = document.createElement("img");
-    img.src = src;
-    col.appendChild(img);
-  });
-
-  return new Promise(resolve => {
-    // Wait for all images to load before measuring
-    const imgs = col.querySelectorAll("img");
-    let loaded = 0;
-
-    imgs.forEach(img => {
-      if (img.complete) {
-        loaded++;
-      } else {
-        img.onload = () => {
-          loaded++;
-          if (loaded === imgs.length) finish();
-        };
-      }
+  // Insert TWO identical sets immediately
+  for (let i = 0; i < 2; i++) {
+    shuffled.forEach(src => {
+      const img = document.createElement("img");
+      img.src = src;
+      col.appendChild(img);
     });
+  }
 
-    if (loaded === imgs.length) finish();
+  // Structural offset for column 3
+  if (offset) {
+    const oneSetHeight = images.length * window.innerHeight * 0.5;
+    const spacer = document.createElement("div");
+    spacer.className = "spacer";
+    spacer.style.height = (oneSetHeight / 3) + "px";
+    col.prepend(spacer);
+  }
 
-    function finish() {
-      const oneSetHeight = col.scrollHeight;
-
-      // structural offset for col3
-      if (offset) {
-        const spacer = document.createElement("div");
-        spacer.className = "spacer";
-        spacer.style.height = (oneSetHeight / 3) + "px";
-        col.prepend(spacer);
-      }
-
-      // Duplicate identical set
-      shuffled.forEach(src => {
-        const img = document.createElement("img");
-        img.src = src;
-        col.appendChild(img);
-      });
-
-      resolve(oneSetHeight);
-    }
-  });
+  return images.length * window.innerHeight * 0.5;
 }
 
-window.onload = async () => {
+window.onload = () => {
 
   const col1 = document.getElementById("col1");
   const col2 = document.getElementById("col2");
   const col3 = document.getElementById("col3");
 
-  const h1 = await buildColumn("col1", col1Images);
-  const h2 = await buildColumn("col2", col2Images);
-  const h3 = await buildColumn("col3", col3Images, true);
+  const h1 = buildColumn("col1", col1Images);
+  const h2 = buildColumn("col2", col2Images);
+  const h3 = buildColumn("col3", col3Images, true);
 
   let pos1 = 0;
   let pos2 = 0;
@@ -229,7 +164,7 @@ window.onload = async () => {
 
   const speedFast = 60;
   const speedSlow = 45;
-  const speedSlightlyFaster = 66; // slightly faster than col1
+  const speedSlightlyFaster = 66;
 
   let lastTime = null;
 
@@ -238,17 +173,14 @@ window.onload = async () => {
     const delta = (time - lastTime) / 1000;
     lastTime = time;
 
-    // Column 1 — UP
     pos1 += speedFast * delta;
     if (pos1 >= h1) pos1 -= h1;
     col1.style.transform = `translateY(-${pos1}px)`;
 
-    // Column 2 — DOWN slower
     pos2 += speedSlow * delta;
     if (pos2 >= h2) pos2 -= h2;
     col2.style.transform = `translateY(${pos2 - h2}px)`;
 
-    // Column 3 — UP slightly faster
     pos3 += speedSlightlyFaster * delta;
     if (pos3 >= h3) pos3 -= h3;
     col3.style.transform = `translateY(-${pos3}px)`;
