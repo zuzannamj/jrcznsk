@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<!-- Title of the website -->
-  <title>Analog Imperfection | Lo-Fi Retro Photography</title>
-  
-  <!-- Meta description for SEO and social previews -->
-  <meta name="description" content="Lo-fi photography with retro vibes, embracing blur, grain, misframes, and imperfect color. Mostly analog, sometimes digital, but always imperfect and intentionally unpolished." />
 
+<title>Analog Imperfection | Lo-Fi Retro Photography</title>
 
+<meta name="description" content="Lo-fi photography with retro vibes, embracing blur, grain, misframes, and imperfect color. Mostly analog, sometimes digital, but always imperfect and intentionally unpolished." />
 
 <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
 
@@ -21,6 +18,7 @@ html, body {
   background: black;
   height: 100%;
   width: 100%;
+  cursor: pointer;
 }
 
 .columns {
@@ -43,11 +41,7 @@ html, body {
   object-fit: cover;
   object-position: center;
   flex-shrink: 0;
-}
-
-.spacer {
-  width: 100%;
-  flex-shrink: 0;
+  pointer-events: none;
 }
 
 .contact {
@@ -60,6 +54,7 @@ html, body {
   display: flex;
   gap: 1vw;
   align-items: baseline;
+  pointer-events: none;
 }
 
 .contact .label {
@@ -68,163 +63,156 @@ html, body {
 
 .contact .email {
   color: rgba(255,255,255,0.7);
-  text-decoration: none;
-}
-
-.contact .email:hover {
-  text-decoration: underline;
 }
 
 @media (min-width: 768px) {
   .contact { font-size: 3vw; }
 }
 </style>
-
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DJ852Y340W"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-DJ852Y340W');
-</script>
-
 </head>
 <body>
 
-<div class="columns">
-  <div class="col" id="col1"></div>
-  <div class="col" id="col2"></div>
-  <div class="col" id="col3"></div>
-</div>
+<div class="columns" id="columns"></div>
 
 <div class="contact">
   <span class="label">Contact:</span>
-  <a class="email" href="mailto:zu@jrcznsk.com?subject=[jrcznsk.com]">zu@jrcznsk.com</a>
+  <span class="email">zu@jrcznsk.com</span>
 </div>
 
 <script>
 
-// --- WEBP ARRAYS ---
+// --- IMAGE ARRAYS ---
 
-const col1Images = [
+const arrays = [
+[
   "image00001.webp","image00002.webp","image00003.webp","image00004.webp",
   "image00005.webp","image00006.webp","image00007.webp","image00008.webp",
   "image00009.webp","image00010.webp","DSCF4607.webp","F1000002.webp",
-  "image000042.webp",
-  "image000072.webp",
-  "image000102.webp", "DSCF4700.webp"
-];
-
-const col2Images = [
+  "image000042.webp","image000072.webp","image000102.webp","DSCF4700.webp"
+],
+[
   "image00011.webp","image00012.webp","image00013.webp","image00014.webp",
   "image00015.webp","image00016.webp","image00017.webp","image00018.webp",
   "image00019.webp","image00020.webp","IMG_1068.webp","IMG_1599.webp",
-  "image000032.webp",
-  "image000092.webp",
-  "image000112.webp"
-];
-
-const col3Images = [
+  "image000032.webp","image000092.webp","image000112.webp"
+],
+[
   "image00021.webp","image00022.webp","image00023.webp","image00024.webp",
   "image00025.webp","image00026.webp","image00027.webp","image00028.webp",
   "image00029.webp","image00030.webp","IMG_1839.webp","IMG_5408.webp",
-  "image000052.webp",
-  "image000062.webp"
+  "image000052.webp","image000062.webp"
+]
 ];
+
+let animationHandles = [];
+let currentColumnCount = 0;
+
 function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-function buildColumnsInterleaved() {
-
-  const col1 = document.getElementById("col1");
-  const col2 = document.getElementById("col2");
-  const col3 = document.getElementById("col3");
-
-  const shuffled1 = shuffle(col1Images);
-  const shuffled2 = shuffle(col2Images);
-  const shuffled3 = shuffle(col3Images);
-
-  const maxLength = Math.max(
-    shuffled1.length,
-    shuffled2.length,
-    shuffled3.length
-  );
-
-  for (let i = 0; i < maxLength; i++) {
-
-    if (shuffled1[i]) {
-      const img1 = document.createElement("img");
-      img1.src = shuffled1[i];
-      col1.appendChild(img1);
-    }
-
-    if (shuffled2[i]) {
-      const img2 = document.createElement("img");
-      img2.src = shuffled2[i];
-      col2.appendChild(img2);
-    }
-
-    if (shuffled3[i]) {
-      const img3 = document.createElement("img");
-      img3.src = shuffled3[i];
-      col3.appendChild(img3);
-    }
-  }
-
-  // duplicate content for seamless loop
-  col1.innerHTML += col1.innerHTML;
-  col2.innerHTML += col2.innerHTML;
-  col3.innerHTML += col3.innerHTML;
-
-  return {
-    h1: col1Images.length * window.innerHeight * 0.5,
-    h2: col2Images.length * window.innerHeight * 0.5,
-    h3: col3Images.length * window.innerHeight * 0.5
-  };
+function calculateColumnCount() {
+  return Math.max(3, Math.floor(window.innerWidth / 300));
 }
 
-window.onload = () => {
+function buildLayout() {
 
-  const { h1, h2, h3 } = buildColumnsInterleaved();
+  const container = document.getElementById("columns");
+  container.innerHTML = "";
 
-  const col1 = document.getElementById("col1");
-  const col2 = document.getElementById("col2");
-  const col3 = document.getElementById("col3");
+  animationHandles.forEach(cancelAnimationFrame);
+  animationHandles = [];
 
-  let pos1 = 0;
-  let pos2 = 0;
-  let pos3 = 0;
+  const columnCount = calculateColumnCount();
+  currentColumnCount = columnCount;
 
-  const speedFast = 60;
-  const speedSlow = 45;
-  const speedSlightlyFaster = 66;
+  for (let i = 0; i < columnCount; i++) {
+
+    const col = document.createElement("div");
+    col.className = "col";
+
+    // horizontal organic offset
+    const randomX = (Math.random() - 0.5) * 40; // ±20px
+    col.style.transform = `translateX(${randomX}px)`;
+
+    const sourceArray = shuffle(arrays[i % 3]);
+
+    sourceArray.forEach(src => {
+      const img = document.createElement("img");
+      img.src = src;
+      col.appendChild(img);
+    });
+
+    col.innerHTML += col.innerHTML;
+
+    container.appendChild(col);
+
+    animateColumn(col, sourceArray.length, i);
+  }
+}
+
+function animateColumn(col, imageCount, index) {
+
+  let pos = 0;
+  const height = imageCount * window.innerHeight * 0.5;
+
+  const baseSpeeds = [60, 45, 66];
+  const speed = baseSpeeds[index % 3];
+
+  // vertical offset pattern
+  pos = (height / 6) * (index % 3);
 
   let lastTime = null;
 
   function animate(time) {
+
     if (!lastTime) lastTime = time;
     const delta = (time - lastTime) / 1000;
     lastTime = time;
 
-    pos1 += speedFast * delta;
-    if (pos1 >= h1) pos1 -= h1;
-    col1.style.transform = `translateY(-${pos1}px)`;
+    pos += speed * delta;
+    if (pos >= height) pos -= height;
 
-    pos2 += speedSlow * delta;
-    if (pos2 >= h2) pos2 -= h2;
-    col2.style.transform = `translateY(${pos2 - h2}px)`;
+    if (index % 3 === 1) {
+      col.style.transform += ` translateY(${pos - height}px)`;
+    } else {
+      col.style.transform += ` translateY(-${pos}px)`;
+    }
 
-    pos3 += speedSlightlyFaster * delta;
-    if (pos3 >= h3) pos3 -= h3;
-    col3.style.transform = `translateY(-${pos3}px)`;
-
-    requestAnimationFrame(animate);
+    animationHandles[index] = requestAnimationFrame(animate);
   }
 
-  requestAnimationFrame(animate);
-};
+  animationHandles[index] = requestAnimationFrame(animate);
+}
+
+// --- GLOBAL CLICK MAILTO ---
+
+document.addEventListener("click", () => {
+  window.location.href = "mailto:zu@jrcznsk.com?subject=[jrcznsk.com]";
+});
+
+// --- INIT ---
+
+buildLayout();
+
+// --- DEBOUNCED RESIZE ---
+
+let resizeTimeout;
+
+window.addEventListener("resize", () => {
+
+  clearTimeout(resizeTimeout);
+
+  resizeTimeout = setTimeout(() => {
+
+    const newCount = calculateColumnCount();
+
+    if (newCount !== currentColumnCount) {
+      buildLayout();
+    }
+
+  }, 200);
+});
 
 </script>
 
