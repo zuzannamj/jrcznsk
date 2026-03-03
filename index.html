@@ -63,12 +63,14 @@ html, body {
 
 .contact .email {
   color: rgba(255,255,255,0.7);
+  text-decoration: none;
 }
 
 @media (min-width: 768px) {
   .contact { font-size: 3vw; }
 }
 </style>
+
 </head>
 <body>
 
@@ -105,35 +107,29 @@ const arrays = [
 ];
 
 let animationHandles = [];
-let currentColumnCount = 0;
 
 function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
 function calculateColumnCount() {
-  return Math.max(3, Math.floor(window.innerWidth / 300));
+  const viewportWidth = window.innerWidth;
+  return Math.max(3, Math.floor(viewportWidth / 300));
 }
 
 function buildLayout() {
 
   const container = document.getElementById("columns");
   container.innerHTML = "";
-
   animationHandles.forEach(cancelAnimationFrame);
   animationHandles = [];
 
   const columnCount = calculateColumnCount();
-  currentColumnCount = columnCount;
 
   for (let i = 0; i < columnCount; i++) {
 
     const col = document.createElement("div");
     col.className = "col";
-
-    // horizontal organic offset
-    const randomX = (Math.random() - 0.5) * 40; // ±20px
-    col.style.transform = `translateX(${randomX}px)`;
 
     const sourceArray = shuffle(arrays[i % 3]);
 
@@ -159,9 +155,6 @@ function animateColumn(col, imageCount, index) {
   const baseSpeeds = [60, 45, 66];
   const speed = baseSpeeds[index % 3];
 
-  // vertical offset pattern
-  pos = (height / 6) * (index % 3);
-
   let lastTime = null;
 
   function animate(time) {
@@ -174,9 +167,9 @@ function animateColumn(col, imageCount, index) {
     if (pos >= height) pos -= height;
 
     if (index % 3 === 1) {
-      col.style.transform += ` translateY(${pos - height}px)`;
+      col.style.transform = `translateY(${pos - height}px)`;
     } else {
-      col.style.transform += ` translateY(-${pos}px)`;
+      col.style.transform = `translateY(-${pos}px)`;
     }
 
     animationHandles[index] = requestAnimationFrame(animate);
@@ -195,23 +188,8 @@ document.addEventListener("click", () => {
 
 buildLayout();
 
-// --- DEBOUNCED RESIZE ---
-
-let resizeTimeout;
-
 window.addEventListener("resize", () => {
-
-  clearTimeout(resizeTimeout);
-
-  resizeTimeout = setTimeout(() => {
-
-    const newCount = calculateColumnCount();
-
-    if (newCount !== currentColumnCount) {
-      buildLayout();
-    }
-
-  }, 200);
+  buildLayout();
 });
 
 </script>
