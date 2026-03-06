@@ -105,85 +105,132 @@ gtag('config', 'G-DJ852Y340W');
 
 <script>
 
-// --- WEBP ARRAYS ---
+// --- MASTER IMAGE ARRAY ---
 
-const col1Images = [
-  "image00001.webp","image00002.webp","image00003.webp","image00004.webp",
+const allImages = [
+  "DSCF4607.webp",
+  "DSCF4700.webp",
   "DSCF4864.webp",
-  "image00005.webp","image00006.webp","image00007.webp","image00008.webp",
-  "image00009.webp","image00010.webp","DSCF4607.webp",
-  "DSCF4876.webp",
-  "F1000002.webp","image000042.webp",
-  "image000072.webp",
-  "DSCF4886.webp",
-  "image000102.webp","DSCF4700.webp"
-];
-
-const col2Images = [
-  "image00011.webp","image00012.webp","image00013.webp",
   "DSCF4866.webp",
-  "image00014.webp","image00015.webp","image00016.webp",
+  "DSCF4876.webp",
+  "DSCF4881.webp",
   "DSCF4884.webp",
-  "image00017.webp","image00018.webp","image00019.webp",
-  "image00020.webp","IMG_1068.webp","IMG_1599.webp",
-  "image000032.webp",
+  "DSCF4886.webp",
+  "DSCF4891.webp",
   "DSCF4900.webp",
+  "DSCF4935.webp",
+  "DSCF4941.webp",
+  "DSCF5173.webp",
+  "DSCF5298.webp",
+
+  "F1000002.webp",
+
+  "IMG_1068.webp",
+  "IMG_1599.webp",
+  "IMG_1839.webp",
+  "IMG_5408.webp",
+
+  "image00001.webp",
+  "image00002.webp",
+  "image00003.webp",
+  "image00004.webp",
+  "image00005.webp",
+  "image00006.webp",
+  "image00007.webp",
+  "image00008.webp",
+  "image00009.webp",
+  "image00010.webp",
+
+  "image00011.webp",
+  "image00012.webp",
+  "image00013.webp",
+  "image00014.webp",
+  "image00015.webp",
+  "image00016.webp",
+  "image00017.webp",
+  "image00018.webp",
+  "image00019.webp",
+  "image00020.webp",
+
+  "image00021.webp",
+  "image00022.webp",
+  "image00023.webp",
+  "image00024.webp",
+  "image00025.webp",
+  "image00026.webp",
+  "image00027.webp",
+  "image00028.webp",
+  "image00029.webp",
+  "image00030.webp",
+
+  "image000032.webp",
+  "image000042.webp",
+  "image000052.webp",
+  "image000062.webp",
+  "image000072.webp",
   "image000092.webp",
+  "image000102.webp",
   "image000112.webp"
 ];
 
-const col3Images = [
-  "image00021.webp","image00022.webp","image00023.webp",
-  "DSCF4881.webp",
-  "image00024.webp","image00025.webp","image00026.webp",
-  "image00027.webp","image00028.webp",
-  "DSCF4891.webp",
-  "image00029.webp","image00030.webp","IMG_1839.webp",
-  "IMG_5408.webp","image000052.webp","image000062.webp"
-];
-  
+let col1Images = [];
+let col2Images = [];
+let col3Images = [];
+
+// --- SHUFFLE ---
+
 function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
+// --- DISTRIBUTE EQUALLY ---
+
+function distributeImages() {
+
+  const shuffled = shuffle(allImages);
+
+  shuffled.forEach((img, i) => {
+    if (i % 3 === 0) col1Images.push(img);
+    else if (i % 3 === 1) col2Images.push(img);
+    else col3Images.push(img);
+  });
+}
+
 function buildColumnsInterleaved() {
+
+  distributeImages();
 
   const col1 = document.getElementById("col1");
   const col2 = document.getElementById("col2");
   const col3 = document.getElementById("col3");
 
-  const shuffled1 = shuffle(col1Images);
-  const shuffled2 = shuffle(col2Images);
-  const shuffled3 = shuffle(col3Images);
-
   const maxLength = Math.max(
-    shuffled1.length,
-    shuffled2.length,
-    shuffled3.length
+    col1Images.length,
+    col2Images.length,
+    col3Images.length
   );
 
   for (let i = 0; i < maxLength; i++) {
 
-    if (shuffled1[i]) {
+    if (col1Images[i]) {
       const img1 = document.createElement("img");
-      img1.src = shuffled1[i];
+      img1.src = col1Images[i];
       col1.appendChild(img1);
     }
 
-    if (shuffled2[i]) {
+    if (col2Images[i]) {
       const img2 = document.createElement("img");
-      img2.src = shuffled2[i];
+      img2.src = col2Images[i];
       col2.appendChild(img2);
     }
 
-    if (shuffled3[i]) {
+    if (col3Images[i]) {
       const img3 = document.createElement("img");
-      img3.src = shuffled3[i];
+      img3.src = col3Images[i];
       col3.appendChild(img3);
     }
   }
 
-  // duplicate content for seamless loop
   col1.innerHTML += col1.innerHTML;
   col2.innerHTML += col2.innerHTML;
   col3.innerHTML += col3.innerHTML;
@@ -214,6 +261,7 @@ window.onload = () => {
   let lastTime = null;
 
   function animate(time) {
+
     if (!lastTime) lastTime = time;
     const delta = (time - lastTime) / 1000;
     lastTime = time;
