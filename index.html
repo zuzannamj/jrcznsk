@@ -186,7 +186,7 @@ function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-// --- DISTRIBUTE EQUALLY ---
+// --- DISTRIBUTE FILENAMES ONLY ---
 
 function distributeImages() {
 
@@ -198,6 +198,8 @@ function distributeImages() {
     else col3Images.push(img);
   });
 }
+
+// --- PROGRESSIVE INTERLEAVED LOADING ---
 
 function buildColumnsInterleaved() {
 
@@ -213,30 +215,49 @@ function buildColumnsInterleaved() {
     col3Images.length
   );
 
-  for (let i = 0; i < maxLength; i++) {
+  let i = 0;
+
+  function loadNextBatch() {
+
+    if (i >= maxLength) {
+      // duplicate after all loaded (for infinite scroll)
+      col1.innerHTML += col1.innerHTML;
+      col2.innerHTML += col2.innerHTML;
+      col3.innerHTML += col3.innerHTML;
+      return;
+    }
 
     if (col1Images[i]) {
-      const img1 = document.createElement("img");
-      img1.src = col1Images[i];
-      col1.appendChild(img1);
+      const img = new Image();
+      img.loading = "eager";
+      img.decoding = "async";
+      img.src = col1Images[i];
+      col1.appendChild(img);
     }
 
     if (col2Images[i]) {
-      const img2 = document.createElement("img");
-      img2.src = col2Images[i];
-      col2.appendChild(img2);
+      const img = new Image();
+      img.loading = "eager";
+      img.decoding = "async";
+      img.src = col2Images[i];
+      col2.appendChild(img);
     }
 
     if (col3Images[i]) {
-      const img3 = document.createElement("img");
-      img3.src = col3Images[i];
-      col3.appendChild(img3);
+      const img = new Image();
+      img.loading = "eager";
+      img.decoding = "async";
+      img.src = col3Images[i];
+      col3.appendChild(img);
     }
+
+    i++;
+
+    // Load next trio on next animation frame
+    requestAnimationFrame(loadNextBatch);
   }
 
-  col1.innerHTML += col1.innerHTML;
-  col2.innerHTML += col2.innerHTML;
-  col3.innerHTML += col3.innerHTML;
+  loadNextBatch();
 
   return {
     h1: col1Images.length * window.innerHeight * 0.5,
@@ -244,6 +265,8 @@ function buildColumnsInterleaved() {
     h3: col3Images.length * window.innerHeight * 0.5
   };
 }
+
+// --- START EVERYTHING ---
 
 window.onload = () => {
 
